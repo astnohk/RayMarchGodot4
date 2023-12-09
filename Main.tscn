@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://d140rgja6k3v2"]
+
+[ext_resource type="Shader" path="res://MS_RayMarch.gdshader" id="1_7l1jq"]
+[ext_resource type="Script" path="res://RayMarchInitializer.gd" id="2_d23hl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w711r"]
+shader = ExtResource("1_7l1jq")
+shader_parameter/seed = null
+shader_parameter/cameraPosition = null
+shader_parameter/max_iter = 24.0
+shader_parameter/focus = 2.2
+shader_parameter/f_val = 14.0
+shader_parameter/numberOfShapes = 1
+shader_parameter/shape_type = PackedInt32Array()
+shader_parameter/shape_ope = null
+shader_parameter/shape_va = PackedFloat32Array()
+shader_parameter/shape_vb = PackedFloat32Array()
+shader_parameter/shape_fa = PackedFloat32Array()
+shader_parameter/shape_fb = PackedFloat32Array()
+shader_parameter/shape_col = PackedVector3Array()
+shader_parameter/shape_ref = PackedVector3Array()
+shader_parameter/shape_rough = PackedFloat32Array()
+shader_parameter/shape_f0 = PackedFloat32Array()
+shader_parameter/shape_cr = PackedFloat32Array()
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+material = SubResource("ShaderMaterial_w711r")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_d23hl")
