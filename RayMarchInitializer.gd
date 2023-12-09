@@ -154,7 +154,7 @@ func createShapeStructSphere():
 	return {
 		"type": PackedInt32Array([ SHAPE_TYPE_SPHERE, SHAPE_TYPE_NULL, SHAPE_TYPE_NULL, SHAPE_TYPE_NULL ]),
 		"ope": PackedInt32Array([ SHAPE_OPERATION_ASSIGN, SHAPE_OPERATION_NONE, SHAPE_OPERATION_NONE, SHAPE_OPERATION_NONE ]),
-		"va": createPackedFloat32Mat4([ -0.8, -0.7, 2.2, 0.0 ]),
+		"va": createPackedFloat32Mat4([ -0.8, -0.7, 3.1, 0.0 ]),
 		"vb": createPackedFloat32Mat4([ 0.0, 0.0, 0.0, 0.0 ]),
 		"fa": PackedFloat32Array([ 0.4, 0.0, 0.0, 0.0 ]),
 		"fb": PackedFloat32Array([ 0.0, 0.0, 0.0, 0.0 ]),
@@ -166,16 +166,92 @@ func createShapeStructSphere():
 		"mu": 1.2,
 	}
 
+func createShapeStructCylinder():
+	return {
+		"type": PackedInt32Array([ SHAPE_TYPE_CYLINDER, SHAPE_TYPE_NULL, SHAPE_TYPE_NULL, SHAPE_TYPE_NULL ]),
+		"ope": PackedInt32Array([ SHAPE_OPERATION_ASSIGN, SHAPE_OPERATION_NONE, SHAPE_OPERATION_NONE, SHAPE_OPERATION_NONE ]),
+		"va": createPackedFloat32Mat4([ 0.8, -0.7, 2.2, 0.0 ]),
+		"vb": createPackedFloat32Mat4([ -0.2, 0.3, 3.0, 0.0 ]),
+		"fa": PackedFloat32Array([ 0.1, 0.0, 0.0, 0.0 ]),
+		"fb": PackedFloat32Array([ 0.0, 0.0, 0.0, 0.0 ]),
+		"col": Vector3(0.1, 0.1, 0.1),
+		"ref": Vector3(1.0, 1.0, 1.0),
+		"rough": 0.8,
+		"f0": 0.2,
+		"cr": 0.0,
+		"mu": 1.2,
+	}
+
+func createHuman(pos: Vector3):
+	var body = createShapeStructCylinder()
+	body["va"][0] = 0.0 + pos.x
+	body["va"][1] = 0.65 + pos.y
+	body["va"][2] = pos.z
+	body["vb"][0] = 0.0 + pos.x
+	body["vb"][1] = -0.1 + pos.y
+	body["vb"][2] = pos.z
+	body["fa"][0] = 0.15
+	body["ref"] = Vector3(0.9, 0.1, 0.1)
+	shapes.append(body)
+	var larm = createShapeStructCylinder()
+	larm["va"][0] = 0.1 + pos.x
+	larm["va"][1] = 0.5 + pos.y
+	larm["va"][2] = pos.z
+	larm["vb"][0] = 1.0 + pos.x
+	larm["vb"][1] = 0.6 + pos.y
+	larm["vb"][2] = pos.z
+	larm["fa"][0] = 0.08
+	larm["ref"] = Vector3(0.98, 0.98, 0.7)
+	shapes.append(larm)
+	var rarm = createShapeStructCylinder()
+	rarm["va"][0] = -0.1 + pos.x
+	rarm["va"][1] = 0.5 + pos.y
+	rarm["va"][2] = pos.z
+	rarm["vb"][0] = -0.5 + pos.x
+	rarm["vb"][1] = -0.2 + pos.y
+	rarm["vb"][2] = pos.z
+	rarm["fa"][0] = 0.08
+	rarm["ref"] = Vector3(0.98, 0.98, 0.7)
+	shapes.append(rarm)
+	var lleg = createShapeStructCylinder()
+	lleg["va"][0] = 0.05 + pos.x
+	lleg["va"][1] = -0.1 + pos.y
+	lleg["va"][2] = pos.z
+	lleg["vb"][0] = 0.2 + pos.x
+	lleg["vb"][1] = -0.9 + pos.y
+	lleg["vb"][2] = pos.z
+	lleg["ref"] = Vector3(0.25, 0.25, 0.98)
+	shapes.append(lleg)
+	var rleg = createShapeStructCylinder()
+	rleg["va"][0] = -0.05 + pos.x
+	rleg["va"][1] = -0.1 + pos.y
+	rleg["va"][2] = pos.z
+	rleg["vb"][0] = -0.3 + pos.x
+	rleg["vb"][1] = -0.9 + pos.y
+	rleg["vb"][2] = pos.z
+	rleg["ref"] = Vector3(0.25, 0.25, 0.98)
+	shapes.append(rleg)
+	var head = createShapeStructSphere()
+	head["va"][0] = 0.0 + pos.x
+	head["va"][1] = 0.85 + pos.y
+	head["va"][2] = pos.z
+	head["fa"][0] = 0.3
+	head["ref"] = Vector3(1.0, 0.98, 0.98)
+	shapes.append(head)
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	shapes.append(createShapeStructDeepWall())
-	shapes.append(createShapeStructBackLight())
+	#shapes.append(createShapeStructDeepWall())
+	#shapes.append(createShapeStructBackLight())
 	shapes.append(createShapeStructFloor())
 	shapes.append(createShapeStructCeiling())
 	shapes.append(createShapeStructLeftWall())
 	shapes.append(createShapeStructRightWall())
 	sphere = createShapeStructSphere()
 	shapes.append(sphere)
+	createHuman(Vector3(0.2, -0.6, 3.2))
+
 	material = self.material
 	material.set_shader_parameter("seed", 0.65535)
 	material.set_shader_parameter("max_iter", MAX_ITER)
@@ -228,5 +304,5 @@ func _process(delta: float):
 	var f = 0.6
 	var f2 = 0.7
 	sphere["va"][0] = -0.8 + 0.3 * sin(f * t * PI)
-	sphere["va"][1] = -0.6 + 0.1 * cos(f2 * t * PI)
+	sphere["va"][1] = 0.4 + 0.1 * cos(f2 * t * PI)
 	setShapes()
